@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotes</title>
+    <!-- Link to Material Icons -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom CSS */
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .quote-table {
+        width: 100%;
+      }
+      .quote-table th,
+      .quote-table td {
+        padding: 8px;
+        vertical-align: top;
+      }
+      .quote-actions a {
+        color: #007bff;
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Quotes</h1>
+      <hr />
+      <table class="table quote-table">
+        {% for item in data %}
+        <tr>
+          <td>{{ item["owner"] }}</td>
+          <td>{{ item["text"] }}</td>
+          <td><em>--</em> <em>{{ item["author"] }}</em></td>
+          <td class="quote-actions">
+            <a href="/edit/{{ item['_id'] }}"
+              ><i class="material-icons">mode_edit</i></a
+            >
+            <a href="/delete/{{ item['_id'] }}"
+              ><i class="material-icons">delete</i></a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <hr />
+      <a href="/add" class="btn btn-primary">Add a new quote!</a>
+      <hr />
+      <p>User = {{ user }} (<a href="/logout">Logout</a>)</p>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

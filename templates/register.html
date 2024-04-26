@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register your Account</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom CSS */
+      body {
+        background-color: #f8f9fa;
+      }
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-title {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-6">
+          <div class="form-container">
+            <h1 class="form-title">Register your Account</h1>
+            <form action="/register" method="POST">
+              <div class="form-group">
+                <label for="user">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="user"
+                  name="user"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password2">Re-enter password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password2"
+                  name="password2"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">
+                Register
+              </button>
+              <br />
+              <a href="/" class="btn btn-secondary btn-block">Cancel</a>
+            </form>
+            <p class="text-center mt-3">
+              Already registered? <a href="/login">Log in here!</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

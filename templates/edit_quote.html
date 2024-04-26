@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Quote</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom CSS */
+      body {
+        background-color: #f8f9fa;
+      }
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-title {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+          <div class="form-container">
+            <h1 class="form-title">Edit this Quote...</h1>
+            <form action="/edit" method="POST">
+              <input type="hidden" id="_id" name="_id" value="{{ data["_id"] }}"
+              />
+              <div class="form-group">
+                <label for="newQuote">Quote</label>
+                <textarea
+                  class="form-control"
+                  id="newQuote"
+                  name="newQuote"
+                  rows="3"
+                >
+{{ data["text"] }}</textarea
+                >
+              </div>
+              <div class="form-group">
+                <label for="newAuthor">Author</label>
+                <input type="text" class="form-control" id="newAuthor"
+                name="newAuthor" value="{{ data["author"] }}">
+              </div>
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="public"
+                name="public" {% if data["public"] %} checked {% endif %}>
+                <label class="form-check-label" for="public">Public?</label>
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+              <br />
+              <a href="/" class="btn btn-secondary mt-2">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
