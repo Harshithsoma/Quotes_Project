@@ -14,7 +14,6 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
       /* Custom CSS */
       body {
@@ -107,18 +106,13 @@
     </style>
   </head>
   <body>
-    <div id="app" class="container">
+    <div class="container">
       <div class="form-container">
         <h2>Search Quotes</h2>
-        <form @submit.prevent="searchQuotes">
+        <form action="/quotes" method="GET">
           <div class="form-row">
-            <input
-              type="text"
-              v-model="search"
-              name="search"
-              placeholder="Search quotes..."
-            />
-            <select v-model="privacyFilter" name="privacy">
+            <input type="text" name="search" placeholder="Search quotes..." />
+            <select name="privacy">
               <option value="all">All</option>
               <option value="public">Public</option>
               <option value="private">Private</option>
@@ -129,55 +123,55 @@
       </div>
       <h1>Quotes</h1>
       <hr />
-      <div v-for="item in data" :key="item._id" class="quote-card">
-        <div class="quote-card-title">{{ item.text }}</div>
+      {% for item in data %}
+      <div class="quote-card">
+        <div class="quote-card-title">{{ item["text"] }}</div>
         <div class="quote-details">
-          <strong>Owner:</strong> {{ item.owner }}<br />
-          <strong>Author:</strong> {{ item.author }}<br />
-          <strong>Created at:</strong> {{ item.created_at }}<br />
-          <strong>Status:</strong> {{ item.public ? 'Public' : 'Private' }}
+          <strong>Owner:</strong> {{ item["owner"] }}<br />
+          <strong>Author:</strong> {{ item["author"] }}<br />
+          <strong>Created at:</strong> {{ item["created_at"] }}<br />
+          <strong>Status:</strong> {% if item["public"] %} Public {% else %}
+          Private {% endif %}
         </div>
         <div class="quote-actions">
-          <a :href="'/edit/' + item._id" class="btn btn-sm btn-info">
-            <i class="material-icons">mode_edit</i> Edit
-          </a>
-          <a :href="'/delete/' + item._id" class="btn btn-sm btn-danger">
-            <i class="material-icons">delete</i> Delete
-          </a>
+          <a href="/edit/{{ item['_id'] }}" class="btn btn-sm btn-info"
+            ><i class="material-icons">mode_edit</i> Edit</a
+          >
+          <a href="/delete/{{ item['_id'] }}" class="btn btn-sm btn-danger"
+            ><i class="material-icons">delete</i> Delete</a
+          >
         </div>
         <div class="comment-section">
           <h3>Comments</h3>
           <ul class="list-unstyled">
-            <li
-              v-for="comment in item.comments"
-              :key="comment._id"
-              class="comment-item"
-            >
-              <strong>{{ comment.user }}</strong>: {{ comment.comment_text }}
-              <span
-                v-if="comment.user === user || item.owner === user"
-                class="comment-actions"
-              >
+            {% for comment in item.comments %}
+            <li class="comment-item">
+              <strong>{{ comment.user }}</strong>: {{ comment.comment_text }} {%
+              if comment.user == user or item.owner == user %}
+              <span class="comment-actions">
                 <a
-                  :href="'/edit_comment/' + comment._id"
+                  href="/edit_comment/{{ comment['_id'] }}"
                   class="btn btn-sm btn-info"
                   >Edit</a
                 >
                 <a
-                  :href="'/delete_comment/' + comment._id"
+                  href="/delete_comment/{{ comment['_id'] }}"
                   class="btn btn-sm btn-danger"
                   >Delete</a
                 >
               </span>
+              {% endif %}
             </li>
+            {% endfor %}
           </ul>
           <a
-            :href="'/add_comment/' + item._id"
+            href="/add_comment/{{ item['_id'] }}"
             class="add-comment-btn btn btn-sm btn-success"
             >Add Comment</a
           >
         </div>
       </div>
+      {% endfor %}
       <hr />
       <a href="/add" class="btn btn-primary">Add a new quote!</a>
       <hr />
@@ -185,44 +179,5 @@
     </div>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-      const { createApp } = Vue;
-      createApp({
-        data() {
-          return {
-            user: "{{user}}",
-            search: "",
-            privacyFilter: "all",
-            data: "{{data}}",
-          };
-        },
-        methods: {
-          searchQuotes() {
-            const queryParams = {
-              search: this.search,
-              privacy: this.privacyFilter,
-            };
-
-            fetch("/quotes?" + new URLSearchParams(queryParams))
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error("Network response was not ok");
-                }
-                return response.json();
-              })
-              .then((data) => {
-                this.data = data;
-              })
-              .catch((error) => {
-                console.error(
-                  "There was a problem with the fetch operation:",
-                  error
-                );
-              });
-          },
-        },
-      }).mount("#app");
-    </script>
   </body>
 </html>
