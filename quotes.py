@@ -62,12 +62,11 @@ def get_quotes():
     elif privacy_filter == "private":
         quotes_data = [quote for quote in quotes_data if quote.get("owner") == user]
         
-    # Fetch comments for each quote and add them to the corresponding quote dictionary
+
     for quote in quotes_data:
         comments = comment_collection.find({"quote_id": str(quote["_id"])})
         quote["comments"] = list(comments)
-    
-    # Render the quotes.html template with the combined quotes data and user information
+
     return render_template("quotes.html", data=quotes_data, user=user)
 
 
@@ -193,10 +192,10 @@ def get_edit(id=None):
         # Get the quote by its ID
         quote = quotes_collection.find_one({"_id": ObjectId(id)})
         if quote:
-            # Check if the logged-in user is the owner of the quote
+
             if quote.get("owner") != get_logged_in_user(session_id):
                 return render_template("error.html", message="You are not authorized to edit this quote.")
-            # Pass the quote data to the template
+
             quote["_id"] = str(quote["_id"])
             return render_template("edit_quote.html", data=quote)
         else:
@@ -229,10 +228,8 @@ def post_edit():
         # Get the quote by its ID
         quote = quotes_collection.find_one({"_id": ObjectId(_id)})
         if quote:
-            # Check if the logged-in user is the owner of the quote
             if quote.get("owner") != get_logged_in_user(session_id):
                 return render_template("error.html", message="You are not authorized to edit this quote.")
-            # Update the quote
             values = {"$set": {"text": text, "author": author, "public":public,"comments_allowed":comments_allowed}}
             quotes_collection.update_one({"_id": ObjectId(_id)}, values)
             return redirect("/quotes")
@@ -249,10 +246,8 @@ def get_delete(id=None):
 
     if id:
         quotes_collection = quotes_db.quotes_collection
-        # Get the quote by its ID
         quote = quotes_collection.find_one({"_id": ObjectId(id)})
         if quote:
-            # Check if the logged-in user is the owner of the quote
             if quote.get("owner") == get_logged_in_user(session_id):
                 quotes_collection.delete_one({"_id": ObjectId(id)})
             else:
@@ -287,13 +282,13 @@ def edit_comment(comment_id):
     if not comments_allowed:
         return render_template("error.html", message="Comments are not allowed for this quote.");
 
-    # Check if the logged-in user is the owner of the comment
+
     if comment.get("user") != user:
         return render_template("error.html", message="You are not authorized to edit this comment.")
 
     if request.method == "POST":
         new_comment_text = request.form.get("new_comment_text", "")
-        # Update the comment only if the logged-in user is the owner
+
         if comment.get("user") == user:
             print(comment.get("user"))
             print(user)
