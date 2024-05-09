@@ -195,7 +195,7 @@ def get_edit(id=None):
         if quote:
             # Check if the logged-in user is the owner of the quote
             if quote.get("owner") != get_logged_in_user(session_id):
-                return "You are not authorized to edit this quote."
+                return render_template("error.html", message="You are not authorized to edit this quote.")
             # Pass the quote data to the template
             quote["_id"] = str(quote["_id"])
             return render_template("edit_quote.html", data=quote)
@@ -231,7 +231,7 @@ def post_edit():
         if quote:
             # Check if the logged-in user is the owner of the quote
             if quote.get("owner") != get_logged_in_user(session_id):
-                return "You are not authorized to edit this quote."
+                return render_template("error.html", message="You are not authorized to edit this quote.")
             # Update the quote
             values = {"$set": {"text": text, "author": author, "public":public,"comments_allowed":comments_allowed}}
             quotes_collection.update_one({"_id": ObjectId(_id)}, values)
@@ -256,7 +256,7 @@ def get_delete(id=None):
             if quote.get("owner") == get_logged_in_user(session_id):
                 quotes_collection.delete_one({"_id": ObjectId(id)})
             else:
-                return  "You are not authorized to delete the quote"
+                return render_template("error.html", message="You are not authorized to delete the quote");
         else:
             return "Quote not found."
 
@@ -285,11 +285,11 @@ def edit_comment(comment_id):
     
     comments_allowed = quote.get("comments_allowed", False)
     if not comments_allowed:
-        return "Comments are not allowed for this quote."
+        return render_template("error.html", message="Comments are not allowed for this quote.");
 
     # Check if the logged-in user is the owner of the comment
     if comment.get("user") != user:
-        return "You are not authorized to edit this comment."
+        return render_template("error.html", message="You are not authorized to edit this comment.")
 
     if request.method == "POST":
         new_comment_text = request.form.get("new_comment_text", "")
@@ -300,7 +300,7 @@ def edit_comment(comment_id):
             comment_collection.update_one({"_id": ObjectId(comment_id)}, {"$set": {"comment_text": new_comment_text}})
             return redirect("/quotes")
         else:
-            return "You are not authorized to edit this comment."
+            return render_template("error.html", message="You are not authorized to edit this comment.")
     else:
         return render_template("edit_comment.html", comment=comment)
 
@@ -329,7 +329,7 @@ def delete_comment(comment_id):
     if comment.get("user") == user or quote.get("owner") == user:
         comment_collection.delete_one({"_id": ObjectId(comment_id)})
     else :
-        return "You are not authorized to delete this comment."
+        return render_template("error.html", message="You are not authorized to delete this comment.")
 
     return redirect("/quotes")
 
@@ -349,7 +349,7 @@ def add_comment(quote_id):
         return "Quote not found."
     comments_allowed = quote.get("comments_allowed", False)
     if not comments_allowed:
-        return "Comments are not allowed for this quote."
+        return render_template("error.html", message="Comments are not allowed for this quote.")
     if request.method == "POST":
         comment_text = request.form.get("comment_text", "")
         if comment_text:
