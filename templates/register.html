@@ -34,11 +34,12 @@
         <div class="col-lg-6">
           <div class="form-container">
             <h1 class="form-title">Register your Account</h1>
-            <form action="/register" method="POST">
+            <form action="/register" method="POST" v-on:submit="handleLogin">
               <div class="form-group">
                 <label for="user">Username</label>
                 <input
                   type="text"
+                  v-model="user"
                   class="form-control"
                   id="user"
                   name="user"
@@ -51,6 +52,7 @@
                   type="password"
                   class="form-control"
                   id="password"
+                  v-model="password"
                   name="password"
                   required
                 />
@@ -61,11 +63,16 @@
                   type="password"
                   class="form-control"
                   id="password2"
+                  v-model="password2"
                   name="password2"
                   required
                 />
               </div>
-              <button type="submit" class="btn btn-primary btn-block">
+              <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                @click="handleRegister"
+              >
                 Register
               </button>
               <br />
@@ -79,4 +86,36 @@
       </div>
     </div>
   </body>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          user: "",
+          password: "",
+          password2: "",
+        };
+      },
+      methods: {
+        handleRegister() {
+          const formData = new FormData();
+          formData.append("user", this.user);
+          formData.append("password", this.password);
+          formData.append("password2", this.password2);
+          console.log(formData);
+          fetch("/register", {
+            method: "POST",
+            body: formData,
+          })
+            .then(() => {
+              console.log("Registration Success");
+            })
+            .catch((err) => {
+              console.lo("error", error);
+            });
+        },
+      },
+    }).mount("#app");
+  </script>
 </html>
