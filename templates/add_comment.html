@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Comment</title>
+  </head>
+  <body>
+    <h2>Add Comment</h2>
+    <form action="/add_comment/{{ quote_id }}" method="POST">
+      <label for="comment_text">Comment:</label><br />
+      <textarea
+        id="comment_text"
+        name="comment_text"
+        rows="4"
+        cols="50"
+      ></textarea
+      ><br /><br />
+      <button type="submit">Add Comment</button>
+    </form>
+    <br />
+    <a href="/quotes">Cancel</a>
+  </body>
+</html>

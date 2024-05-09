@@ -56,7 +56,14 @@
               <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="public"
                 name="public" {% if data["public"] %} checked {% endif %}>
-                <label class="form-check-label" for="public">Public?</label>
+                <label class="form-check-label" for="public">Public?</label
+                ><br />
+                <input type="checkbox" class="form-check-input"
+                id="comments_allowed" name="comments_allowed" {% if
+                data["comments_allowed"] %} checked {% endif %}>
+                <label class="form-check-label" for="comments_allowed"
+                  >Comments_allowed?</label
+                >
               </div>
               <button type="submit" class="btn btn-primary">Update</button>
               <br />

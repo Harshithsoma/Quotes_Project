@@ -24,41 +24,154 @@
         margin: 0 auto;
         padding: 20px;
       }
-      .quote-table {
-        width: 100%;
+      .quote-card {
+        margin-bottom: 20px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #fff;
       }
-      .quote-table th,
-      .quote-table td {
-        padding: 8px;
-        vertical-align: top;
+      .quote-card-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
       }
-      .quote-actions a {
-        color: #007bff;
-        margin-right: 5px;
+      .quote-details {
+        margin-bottom: 10px;
+      }
+      .quote-actions {
+        text-align: right;
+      }
+      .comment-section {
+        margin-top: 20px;
+      }
+      .comment-item {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f8f9fa;
+      }
+      .comment-actions {
+        text-align: right;
+      }
+      .add-comment-btn {
+        margin-top: 10px;
+      }
+      .form-container {
+        max-width: 800px; /* Adjusted width */
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Styles for form elements */
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-container input[type="text"],
+      .form-container select {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .form-container button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .form-container button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      /* Adjustments for inline display */
+      .form-container form .form-row {
+        display: flex;
+        align-items: center;
+      }
+
+      .form-container form .form-row select {
+        margin-left: 10px;
       }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="form-container">
+        <h2>Search Quotes</h2>
+        <form action="/quotes" method="GET">
+          <div class="form-row">
+            <input type="text" name="search" placeholder="Search quotes..." />
+            <select name="privacy">
+              <option value="all">All</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+          <button type="submit">Search</button>
+        </form>
+      </div>
       <h1>Quotes</h1>
       <hr />
-      <table class="table quote-table">
-        {% for item in data %}
-        <tr>
-          <td>{{ item["owner"] }}</td>
-          <td>{{ item["text"] }}</td>
-          <td><em>--</em> <em>{{ item["author"] }}</em></td>
-          <td class="quote-actions">
-            <a href="/edit/{{ item['_id'] }}"
-              ><i class="material-icons">mode_edit</i></a
-            >
-            <a href="/delete/{{ item['_id'] }}"
-              ><i class="material-icons">delete</i></a
-            >
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
+      {% for item in data %}
+      <div class="quote-card">
+        <div class="quote-card-title">{{ item["text"] }}</div>
+        <div class="quote-details">
+          <strong>Owner:</strong> {{ item["owner"] }}<br />
+          <strong>Author:</strong> {{ item["author"] }}<br />
+          <strong>Created at:</strong> {{ item["created_at"] }}<br />
+          <strong>Status:</strong> {% if item["public"] %} Public {% else %}
+          Private {% endif %}
+        </div>
+        <div class="quote-actions">
+          <a href="/edit/{{ item['_id'] }}" class="btn btn-sm btn-info"
+            ><i class="material-icons">mode_edit</i> Edit</a
+          >
+          <a href="/delete/{{ item['_id'] }}" class="btn btn-sm btn-danger"
+            ><i class="material-icons">delete</i> Delete</a
+          >
+        </div>
+        <div class="comment-section">
+          <h3>Comments</h3>
+          <ul class="list-unstyled">
+            {% for comment in item.comments %}
+            <li class="comment-item">
+              <strong>{{ comment.user }}</strong>: {{ comment.comment_text }} {%
+              if comment.user == user or item.owner == user %}
+              <span class="comment-actions">
+                <a
+                  href="/edit_comment/{{ comment['_id'] }}"
+                  class="btn btn-sm btn-info"
+                  >Edit</a
+                >
+                <a
+                  href="/delete_comment/{{ comment['_id'] }}"
+                  class="btn btn-sm btn-danger"
+                  >Delete</a
+                >
+              </span>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+          <a
+            href="/add_comment/{{ item['_id'] }}"
+            class="add-comment-btn btn btn-sm btn-success"
+            >Add Comment</a
+          >
+        </div>
+      </div>
+      {% endfor %}
       <hr />
       <a href="/add" class="btn btn-primary">Add a new quote!</a>
       <hr />

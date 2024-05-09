@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Comment</title>
+  </head>
+  <body>
+    <h2>Edit Comment</h2>
+    <form action="/edit_comment/{{ comment['_id'] }}" method="POST">
+      <label for="new_comment_text">New Comment:</label><br />
+      <textarea
+        id="new_comment_text"
+        name="new_comment_text"
+        rows="4"
+        cols="50"
+      >
+{{ comment['comment_text'] }}</textarea
+      ><br /><br />
+      <button type="submit">Save Changes</button>
+    </form>
+    <br />
+    <a href="/quotes">Cancel</a>
+  </body>
+</html>
